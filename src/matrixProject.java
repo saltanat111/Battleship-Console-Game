@@ -63,6 +63,7 @@ public class matrixProject {
             while (doubleShipNumber>placedDoubleShips)
             {
                 
+                
             }
         }
     }
