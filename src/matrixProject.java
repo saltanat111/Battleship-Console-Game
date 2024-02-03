@@ -3,6 +3,8 @@ import java.util.Random;
 
 public class matrixProject {
         public static void main(String[] args) {
+            //System.out.print("\033[H\033[2J");  
+            //System.out.flush();
             Random random = new Random();
             int gameFieldLength = 7;
             char water = '~';
@@ -205,6 +207,10 @@ public class matrixProject {
                     if (gameBoard[coordinates[0]][coordinates[1]]==water)
                     {
                         gameBoard[coordinates[0]][coordinates[1]]=ship1;
+                        if ((coordinates[0]==0)&&(coordinates[1]==0))
+                        {
+                            gameBoard[coordinates[0]+1][coordinates[1]] = protection;
+                        }
                         placedSingleShips++;
                     }
                 }
