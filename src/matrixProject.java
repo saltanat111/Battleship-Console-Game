@@ -133,7 +133,8 @@ public class matrixProject {
                     coordinates[i] = minBorder + random.nextInt(maxBorder-minBorder);
                 }
                 randomCase = minCase + random.nextInt(maxCase - minCase);
-                switch (randomCase) {
+                switch (randomCase) 
+                {
                     case 1://vertical
                     if ((gameBoard[coordinates[0]][coordinates[1]]==water)&&(gameBoard[coordinates[0]-1][coordinates[1]]==water))
                     {
@@ -193,7 +194,20 @@ public class matrixProject {
                     }
                         break;
                 }
+                
             }
+            while (placedSingleShips<singleShipNumber) 
+                {
+                    for (int i = 0;i<2;i++)
+                    {
+                        coordinates[i] = random.nextInt(gameFieldLength);
+                    }
+                    if (gameBoard[coordinates[0]][coordinates[1]]==water)
+                    {
+                        gameBoard[coordinates[0]][coordinates[1]]=ship1;
+                        placedSingleShips++;
+                    }
+                }
             return gameBoard;
         }
     }
