@@ -39,6 +39,7 @@ public class matrixProject {
             int placedSingleShips = 0;
             int minBorder = 1;
             int maxBorder = gameFieldLength-1;
+            int randomCase = minCase + random.nextInt(maxCase - minCase);
             for(char[] row : gameBoard)
             {
                 Arrays.fill(row,water);
@@ -52,7 +53,6 @@ public class matrixProject {
                 if(gameBoard[coordinates[0]][coordinates[1]]==water)
                 {
                     gameBoard[coordinates[0]][coordinates[1]]=ship3;
-                    int randomCase = minCase + random.nextInt(maxCase - minCase);
                     switch (randomCase)
                     {
                         case 1://vertical
@@ -126,13 +126,74 @@ public class matrixProject {
                     
                 }
             }
-            // while (placedDoubleShips<doubleShipNumber)
-            // {
-            //     for(int i = 0;i<coordinates.length;i++)
-            //     {
-            //         coordinates[i] = minBorder + random.nextInt(maxBorder-minBorder);
-            //     }
-            // }
+            while (placedDoubleShips<doubleShipNumber)
+            {
+                for(int i = 0;i<coordinates.length;i++)
+                {
+                    coordinates[i] = minBorder + random.nextInt(maxBorder-minBorder);
+                }
+                randomCase = minCase + random.nextInt(maxCase - minCase);
+                switch (randomCase) {
+                    case 1://vertical
+                    if ((gameBoard[coordinates[0]][coordinates[1]]==water)&&(gameBoard[coordinates[0]-1][coordinates[1]]==water))
+                    {
+                        gameBoard[coordinates[0]][coordinates[1]]=ship2;
+                        gameBoard[coordinates[0]-1][coordinates[1]]=ship2;
+                        if (coordinates[0]==1)
+                        {
+                            for(int i = 0;i<3;i++)
+                            {
+                                gameBoard[coordinates[0]-1+i][coordinates[1]-1]=protection;
+                                gameBoard[coordinates[0]-1+i][coordinates[1]+1]=protection;
+                            }
+                            gameBoard[coordinates[0]+1][coordinates[1]]=protection;
+                            
+                            
+                        }
+                        else
+                        {
+                            for(int i = 0;i<4;i++)
+                            {
+                                gameBoard[coordinates[0]-2+i][coordinates[1]-1]=protection;
+                                gameBoard[coordinates[0]-2+i][coordinates[1]+1]=protection;
+                            }
+                            gameBoard[coordinates[0]+1][coordinates[1]]=protection;
+                            gameBoard[coordinates[0]-2][coordinates[1]]=protection;
+                        }
+                        placedDoubleShips++;
+                    }
+                        break;
+                
+                    case 2://horizontal
+                    if ((gameBoard[coordinates[0]][coordinates[1]]==water)&&(gameBoard[coordinates[0]][coordinates[1]+1]==water))
+                    {
+                        gameBoard[coordinates[0]][coordinates[1]]=ship2;
+                        gameBoard[coordinates[0]][coordinates[1]+1]=ship2;
+                        if(coordinates[1]==5)
+                        {
+                            for(int i = 0;i<3;i++)
+                            {
+                                gameBoard[coordinates[0]-1][coordinates[1]+1-i]=protection;
+                                gameBoard[coordinates[0]+1][coordinates[1]+1-i]=protection;
+                            }
+                            gameBoard[coordinates[0]][coordinates[1]-1]=protection;
+                        }
+                        else
+                        {
+                            for(int i = 0;i<4;i++)
+                            {
+                                gameBoard[coordinates[0]-1][coordinates[1]+2-i]=protection;
+                                gameBoard[coordinates[0]+1][coordinates[1]+2-i]=protection;
+                            }
+                            gameBoard[coordinates[0]][coordinates[1]-1]=protection;
+                            gameBoard[coordinates[0]][coordinates[1]+2]=protection;
+
+                        }
+                        placedDoubleShips++;
+                    }
+                        break;
+                }
+            }
             return gameBoard;
         }
     }
