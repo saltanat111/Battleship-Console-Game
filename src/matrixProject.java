@@ -7,15 +7,19 @@ public class matrixProject {
             int gameFieldLength = 7;
             char water = '~';
             char ship3 = '3';
+            char ship2 = '2';
+            char ship1 = '1';
             char hit = 'h';
             char miss = 'm';
+            char sunk = 's';
             char protection = 'p';
             int singleShipNumber = 4;
             int doubleShipNumber = 2;
             int tripleShipNumber = 1;
-            char[][] gameBoard = createGameBoard(gameFieldLength,water,ship3,singleShipNumber,doubleShipNumber,tripleShipNumber,random,protection);
+            char[][] gameBoard = createGameBoard(gameFieldLength,water,ship3,singleShipNumber,doubleShipNumber,tripleShipNumber,random,protection,ship1,ship2);
             for (int i = 0;i<gameFieldLength;i++)
             {
+                System.out.print(i+1+" ");
                 for (int j = 0;j<gameFieldLength;j++)
                 {
                     System.out.print(gameBoard[i][j]+" ");
@@ -24,7 +28,7 @@ public class matrixProject {
             }
         }
     
-        private static char[][] createGameBoard(int gameFieldLength, char water, char ship3, int singleShipNumber, int doubleShipNumber, int tripleShipNumber,Random random,char protection) 
+        private static char[][] createGameBoard(int gameFieldLength, char water, char ship3, int singleShipNumber, int doubleShipNumber, int tripleShipNumber,Random random,char protection,char ship1,char ship2) 
         {
             char[][] gameBoard = new char[gameFieldLength][gameFieldLength];
             int minCase = 1;
@@ -41,13 +45,9 @@ public class matrixProject {
             }
             while(placedTripleShips<tripleShipNumber)
             {
-                // int minBorder = 1;
-                // int maxBorder = gameFieldLength-1;
                 for(int i = 0;i<coordinates.length;i++)
                 {
-            // int minBorder = 1;
-            // int maxBorder = gameFieldLength-1;
-                    coordinates[i] = minBorder + random.nextInt(maxBorder-minBorder);//(b2 - b1 + 1) + b1
+                    coordinates[i] = minBorder + random.nextInt(maxBorder-minBorder);
                 }
                 if(gameBoard[coordinates[0]][coordinates[1]]==water)
                 {
@@ -58,7 +58,7 @@ public class matrixProject {
                         case 1://vertical
                             gameBoard[coordinates[0]+1][coordinates[1]]=ship3;
                             gameBoard[coordinates[0]-1][coordinates[1]]=ship3;
-                            if(coordinates[0]-1==0)//set borders to triple ship
+                            if(coordinates[0]==1)//set borders to triple ship
                             {
                                 for (int i = 0;i<4;i++)
                                 {
@@ -67,7 +67,7 @@ public class matrixProject {
                                 }
                                 gameBoard[coordinates[0]+2][coordinates[1]]=protection;
                             }
-                            else if(coordinates[0]+1==6)
+                            else if(coordinates[0]==5)
                             {
                                 gameBoard[coordinates[0]-2][coordinates[1]]=protection;
                                 for (int i = 0;i<4;i++)
@@ -75,7 +75,6 @@ public class matrixProject {
                                     gameBoard[coordinates[0]-2+i][coordinates[1]+1]=protection;
                                     gameBoard[coordinates[0]-2+i][coordinates[1]-1]=protection;
                                 }
-                                
                             }
                             else
                             {
@@ -91,6 +90,36 @@ public class matrixProject {
                         case 2://horizontal
                             gameBoard[coordinates[0]][coordinates[1]+1]=ship3;
                             gameBoard[coordinates[0]][coordinates[1]-1]=ship3;
+                            if(coordinates[1]==1)
+                            {
+                                for (int i = 0;i<4;i++)
+                                {
+                                    gameBoard[coordinates[0]-1][coordinates[1]-1+i]=protection;
+                                    gameBoard[coordinates[0]+1][coordinates[1]-1+i]=protection;
+                                }
+                                gameBoard[coordinates[0]][coordinates[1]+2]=protection;
+                            }
+                            else if(coordinates[1]==5)
+                            {
+                                for (int i = 0;i<4;i++)
+                                {
+                                    gameBoard[coordinates[0]-1][coordinates[1]+1-i]=protection;
+                                    gameBoard[coordinates[0]+1][coordinates[1]+1-i]=protection;
+                                }
+                                gameBoard[coordinates[0]][coordinates[1]-2]=protection;
+                            }
+                            else
+                            {
+                                gameBoard[coordinates[0]][coordinates[1]-2]=protection;
+                                for (int i = 0;i<5;i++)
+                                {
+                                    gameBoard[coordinates[0]-1][coordinates[1]-2+i]=protection;
+                                    gameBoard[coordinates[0]+1][coordinates[1]-2+i]=protection;
+                                }
+                                gameBoard[coordinates[0]][coordinates[1]+2]=protection;
+
+                            }
+
                             break;
                     }
                     placedTripleShips++;
@@ -99,12 +128,11 @@ public class matrixProject {
             }
             // while (placedDoubleShips<doubleShipNumber)
             // {
-            //     for (int i = 0;i<coordinates.length;i++)
+            //     for(int i = 0;i<coordinates.length;i++)
             //     {
-            //         coordinates[i] = random.nextInt(((gameFieldLength-2)-0+1)+0);
+            //         coordinates[i] = minBorder + random.nextInt(maxBorder-minBorder);
             //     }
             // }
-
             return gameBoard;
         }
     }
