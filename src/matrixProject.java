@@ -210,6 +210,9 @@ public class matrixProject {
                         if ((coordinates[0]==0)&&(coordinates[1]==0))
                         {
                             gameBoard[coordinates[0]+1][coordinates[1]] = protection;
+                            gameBoard[coordinates[0]+1][coordinates[1]+1]= protection;
+                            gameBoard[coordinates[0]][coordinates[1]+1]= protection;
+
                         }
                         placedSingleShips++;
                     }
@@ -217,4 +220,3 @@ public class matrixProject {
             return gameBoard;
         }
     }
-
