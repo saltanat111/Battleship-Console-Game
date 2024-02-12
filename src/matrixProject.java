@@ -19,6 +19,11 @@ public class matrixProject {
             int doubleShipNumber = 2;
             int tripleShipNumber = 1;
             char[][] gameBoard = createGameBoard(gameFieldLength,water,ship3,singleShipNumber,doubleShipNumber,tripleShipNumber,random,protection,ship1,ship2);
+            printGameBoard(gameBoard,gameFieldLength,protection,water);
+           
+        }
+    
+        private static void printGameBoard(char[][] gameBoard,int gameFieldLength,char protection,char water) {
             for (int i = 0;i<gameFieldLength;i++)
             {
                 System.out.print(i+1+" ");
@@ -37,7 +42,7 @@ public class matrixProject {
                 System.out.println();
             }
         }
-    
+
         private static char[][] createGameBoard(int gameFieldLength, char water, char ship3, int singleShipNumber, int doubleShipNumber, int tripleShipNumber,Random random,char protection,char ship1,char ship2) 
         {
             char[][] gameBoard = new char[gameFieldLength][gameFieldLength];
