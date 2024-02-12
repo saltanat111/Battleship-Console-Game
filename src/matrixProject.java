@@ -24,7 +24,15 @@ public class matrixProject {
                 System.out.print(i+1+" ");
                 for (int j = 0;j<gameFieldLength;j++)
                 {
-                    System.out.print(gameBoard[i][j]+" ");
+                    if(gameBoard[i][j]==protection)
+                    {
+                        System.out.print(water+" ");
+                    }
+                    else
+                    {
+                        System.out.print(gameBoard[i][j]+" ");
+                    }
+                    
                 }
                 System.out.println();
             }
@@ -60,7 +68,7 @@ public class matrixProject {
                         case 1://vertical
                             gameBoard[coordinates[0]+1][coordinates[1]]=ship3;
                             gameBoard[coordinates[0]-1][coordinates[1]]=ship3;
-                            if(coordinates[0]==1)//set borders to triple ship
+                            if(coordinates[0]==1)
                             {
                                 for (int i = 0;i<4;i++)
                                 {
@@ -132,91 +140,180 @@ public class matrixProject {
             {
                 for(int i = 0;i<coordinates.length;i++)
                 {
-                    coordinates[i] = minBorder + random.nextInt(maxBorder-minBorder);
+                    coordinates[i] =random.nextInt(gameFieldLength);
                 }
-                randomCase = minCase + random.nextInt(maxCase - minCase);
-                switch (randomCase) 
-                {
-                    case 1://vertical
-                    if ((gameBoard[coordinates[0]][coordinates[1]]==water)&&(gameBoard[coordinates[0]-1][coordinates[1]]==water))
+                //vertical down
+                    if ((gameBoard[coordinates[0]][coordinates[1]]==water)&&(coordinates[0]<=5)&&(gameBoard[coordinates[0]+1][coordinates[1]]==water))
                     {
                         gameBoard[coordinates[0]][coordinates[1]]=ship2;
-                        gameBoard[coordinates[0]-1][coordinates[1]]=ship2;
-                        if (coordinates[0]==1)
+                        gameBoard[coordinates[0]+1][coordinates[1]]=ship2;
+                        if(coordinates[0]==0&&coordinates[1]==0)//left upper corner
                         {
                             for(int i = 0;i<3;i++)
+                            {
+                                gameBoard[coordinates[0]+i][coordinates[1]+1]=protection;
+                            }
+                            gameBoard[coordinates[0]+2][coordinates[1]]=protection;
+                        }
+                        else if(coordinates[0]==5&&coordinates[1]==0)//left lower corner
+                        {
+                            for(int i = 0;i<3;i++)
+                            {
+                                gameBoard[coordinates[0]-1+i][coordinates[1]+1]=protection;
+                            }
+                            gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                        }
+                        else if(coordinates[0]==0&&coordinates[1]==6)//right upper corner
+                        {
+                            for (int i = 0;i<3;i++)
+                            {
+                                gameBoard[coordinates[0]+i][coordinates[1]-1]=protection;
+                            }
+                            gameBoard[coordinates[0]+2][coordinates[1]]=protection;
+                        }
+                        else if(coordinates[0]==5&&coordinates[1]==6)//right lower corner
+                        {
+                            for (int i = 0;i<3;i++)
+                            {
+                                gameBoard[coordinates[0]-1+i][coordinates[1]-1]=protection;
+                            }
+                            gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                        }
+                        else if(coordinates[1]==0)//right side
+                        {
+                            for (int  i = 0;i<4;i++)
+                            {
+                                gameBoard[coordinates[0]-1+i][coordinates[1]+1]=protection;
+                            }
+                            gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                            gameBoard[coordinates[0]+2][coordinates[1]]=protection;                        
+                        }
+                        else if(coordinates[1]==6)//left side
+                        {
+                            for (int  i = 0;i<4;i++)
+                            {
+                                gameBoard[coordinates[0]-1+i][coordinates[1]-1]=protection;
+                            }
+                            gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                            gameBoard[coordinates[0]+2][coordinates[1]]=protection;
+                        }
+                        else if(coordinates[0]==0)//upper side
+                        {
+                            for (int  i = 0;i<3;i++)
+                            {
+                                gameBoard[coordinates[0]+i][coordinates[1]-1]=protection;
+                                gameBoard[coordinates[0]+i][coordinates[1]+1]=protection;
+                            }
+                            gameBoard[coordinates[0]+2][coordinates[1]]=protection;
+                        }
+                        else if(coordinates[0]==5)//lower side
+                        {
+                            for (int  i = 0;i<3;i++)
                             {
                                 gameBoard[coordinates[0]-1+i][coordinates[1]-1]=protection;
                                 gameBoard[coordinates[0]-1+i][coordinates[1]+1]=protection;
                             }
-                            gameBoard[coordinates[0]+1][coordinates[1]]=protection;
-                            
-                            
+                            gameBoard[coordinates[0]-1][coordinates[1]]=protection;
                         }
-                        else
+                        else //all sides of the ship are wall free
                         {
-                            for(int i = 0;i<4;i++)
+                            for (int  i = 0;i<4;i++)
                             {
-                                gameBoard[coordinates[0]-2+i][coordinates[1]-1]=protection;
-                                gameBoard[coordinates[0]-2+i][coordinates[1]+1]=protection;
+                                gameBoard[coordinates[0]-1+i][coordinates[1]-1]=protection;
+                                gameBoard[coordinates[0]-1+i][coordinates[1]+1]=protection;
                             }
-                            gameBoard[coordinates[0]+1][coordinates[1]]=protection;
-                            gameBoard[coordinates[0]-2][coordinates[1]]=protection;
+                            gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                            gameBoard[coordinates[0]+2][coordinates[1]]=protection;
                         }
-                        placedDoubleShips++;
-                    }
-                        break;
-                
-                    case 2://horizontal
-                    if ((gameBoard[coordinates[0]][coordinates[1]]==water)&&(gameBoard[coordinates[0]][coordinates[1]+1]==water))
-                    {
-                        gameBoard[coordinates[0]][coordinates[1]]=ship2;
-                        gameBoard[coordinates[0]][coordinates[1]+1]=ship2;
-                        if(coordinates[1]==5)
-                        {
-                            for(int i = 0;i<3;i++)
-                            {
-                                gameBoard[coordinates[0]-1][coordinates[1]+1-i]=protection;
-                                gameBoard[coordinates[0]+1][coordinates[1]+1-i]=protection;
-                            }
-                            gameBoard[coordinates[0]][coordinates[1]-1]=protection;
-                        }
-                        else
-                        {
-                            for(int i = 0;i<4;i++)
-                            {
-                                gameBoard[coordinates[0]-1][coordinates[1]+2-i]=protection;
-                                gameBoard[coordinates[0]+1][coordinates[1]+2-i]=protection;
-                            }
-                            gameBoard[coordinates[0]][coordinates[1]-1]=protection;
-                            gameBoard[coordinates[0]][coordinates[1]+2]=protection;
 
-                        }
                         placedDoubleShips++;
                     }
-                        break;
-                }
-                
+                       
             }
             while (placedSingleShips<singleShipNumber) 
+            {
+                
+                coordinates[0] =  random.nextInt(maxBorder);
+                coordinates[1] =  random.nextInt(maxBorder);
+                if (gameBoard[coordinates[0]][coordinates[1]]==water)
                 {
-                    for (int i = 0;i<2;i++)
+                    gameBoard[coordinates[0]][coordinates[1]]=ship1; 
+                    if (coordinates[0]==0&&coordinates[1]==0)
                     {
-                        coordinates[i] = random.nextInt(gameFieldLength);
+                        gameBoard[coordinates[0]+1][coordinates[1]]=protection;
+                        gameBoard[coordinates[0]][coordinates[1]+1]=protection;
+                        gameBoard[coordinates[0]+1][coordinates[1]+1]=protection;
                     }
-                    if (gameBoard[coordinates[0]][coordinates[1]]==water)
+                    else if(coordinates[0]==0&&coordinates[1]==6)
                     {
-                        gameBoard[coordinates[0]][coordinates[1]]=ship1;
-                        if ((coordinates[0]==0)&&(coordinates[1]==0))
+                        gameBoard[coordinates[0]][coordinates[1]-1]=protection;
+                        gameBoard[coordinates[0]+1][coordinates[1]-1]=protection;
+                        gameBoard[coordinates[0]+1][coordinates[1]]=protection;
+                    }
+                    else if(coordinates[0]==6&&coordinates[1]==0)
+                    {
+                        gameBoard[coordinates[0]][coordinates[1]+1]=protection;
+                        gameBoard[coordinates[0]-1][coordinates[1]+1]=protection;
+                        gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                    }
+                    else if(coordinates[0]==6&&coordinates[1]==6)
+                    {
+                        gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                        gameBoard[coordinates[0]-1][coordinates[1]-1]=protection;
+                        gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                    }
+                    else if(coordinates[0]==0)
+                    {
+                        gameBoard[coordinates[0]][coordinates[1]+1]=protection;
+                        gameBoard[coordinates[0]][coordinates[1]-1]=protection;
+                        for(int i = 0;i<3;i++)
                         {
-                            gameBoard[coordinates[0]+1][coordinates[1]] = protection;
-                            gameBoard[coordinates[0]+1][coordinates[1]+1]= protection;
-                            gameBoard[coordinates[0]][coordinates[1]+1]= protection;
-
+                            gameBoard[coordinates[0]+1][coordinates[1]-1+i]=protection;
                         }
-                        placedSingleShips++;
                     }
+                    else if(coordinates[0]==6)
+                    {
+                        gameBoard[coordinates[0]][coordinates[1]+1]=protection;
+                        gameBoard[coordinates[0]][coordinates[1]-1]=protection;
+                        for(int i = 0;i<3;i++)
+                        {
+                            gameBoard[coordinates[0]-1][coordinates[1]-1+i]=protection;
+                        }   
+                    }
+                    else if(coordinates[1]==0)
+                    {
+                        gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                        gameBoard[coordinates[0]+1][coordinates[1]]=protection;
+                        for(int i = 0;i<3;i++)
+                        {
+                            gameBoard[coordinates[0]-1+i][coordinates[1]+1]=protection;
+                        }
+                    }
+                    else if(coordinates[1]==6)
+                    {
+                        gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                        gameBoard[coordinates[0]+1][coordinates[1]]=protection;
+                        for(int i = 0;i<3;i++)
+                        {
+                            gameBoard[coordinates[0]-1+i][coordinates[1]-1]=protection;
+                        }
+                    }
+                    else
+                    {
+                        gameBoard[coordinates[0]-1][coordinates[1]]=protection;
+                        gameBoard[coordinates[0]+1][coordinates[1]]=protection;
+                        for(int i = 0;i<3;i++)
+                        {
+                            gameBoard[coordinates[0]-1+i][coordinates[1]+1]=protection;
+                        } 
+                        for(int i = 0;i<3;i++)
+                        {
+                            gameBoard[coordinates[0]-1+i][coordinates[1]-1]=protection;
+                        } 
+                    }
+                    placedSingleShips++;
                 }
+        }
             return gameBoard;
         }
     }
