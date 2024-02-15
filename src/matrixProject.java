@@ -1,8 +1,11 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Scanner;
 
 public class matrixProject {
         public static void main(String[] args) {
+            Scanner scan = new Scanner(System.in);
             //System.out.print("\033[H\033[2J");  
             //System.out.flush();
             Random random = new Random();
@@ -18,25 +21,109 @@ public class matrixProject {
             int singleShipNumber = 4;
             int doubleShipNumber = 2;
             int tripleShipNumber = 1;
+            int shipNum = 11;
             char[][] gameBoard = createGameBoard(gameFieldLength,water,ship3,singleShipNumber,doubleShipNumber,tripleShipNumber,random,protection,ship1,ship2);
             printGameBoard(gameBoard,gameFieldLength,protection,water);
+            ArrayList<Integer> doubleShipLocations = identifyAllDoubleShipLocations(gameBoard,gameFieldLength,ship2);
+            while (shipNum>0)
+            {
+                int[] userShot = getUserShot(scan);
+                checkUserShotAndUpdateGameboard(gameBoard,userShot,gameFieldLength,water,userShot,ship1,ship2,ship3,hit,miss,sunk,doubleShipLocations,shipNum);
+            }
+            
+            
+
            
         }
     
-        private static void printGameBoard(char[][] gameBoard,int gameFieldLength,char protection,char water) {
+        private static ArrayList<Integer> identifyAllDoubleShipLocations(char[][] gameBoard, int gameFieldLength,char ship2) {
+            ArrayList <Integer> doubleShipLocations = new ArrayList<>();
+            for (int i = 0;i<gameFieldLength;i++)
+            {
+                for (int j = 0;j<gameFieldLength;j++)
+                {
+                    if(gameBoard[i][j]==ship2)
+                    {
+                        doubleShipLocations.add(i);
+                        doubleShipLocations.add(j);
+                    }
+                }
+            }
+            return doubleShipLocations;
+        }
+
+        private static void checkUserShotAndUpdateGameboard(char[][] gameBoard, int[] userShot, int gameFieldLength, char water, int[] userShot2, char ship1, char ship2, char ship3, char hit, char miss, char sunk, ArrayList<Integer> doubleShipLocations, int shipNum) {
+                    
+                    if(gameBoard[userShot[0]][userShot[1]]==ship3)   
+                    {
+                        gameBoard[userShot[0]][userShot[1]] = hit;
+                        shipNum--;
+                    }
+                    else if(gameBoard[userShot[0]][userShot[1]]==ship2)
+                    {
+                        gameBoard[userShot[0]][userShot[1]] = hit;
+                        shipNum--;
+                    }
+                    else if(gameBoard[userShot[0]][userShot[1]]==ship1)
+                    {
+                        gameBoard[userShot[0]][userShot[1]] = sunk;
+                        shipNum--;
+                    }
+                    else
+                    {
+                        gameBoard[userShot[0]][userShot[1]] = miss;
+                        shipNum--;
+                    }
+
+            System.out.print("  ");
+            for (int i = 0;i<7;i++)
+            {
+                System.out.print(i+1+" ");
+            }
+            System.out.println();
             for (int i = 0;i<gameFieldLength;i++)
             {
                 System.out.print(i+1+" ");
                 for (int j = 0;j<gameFieldLength;j++)
                 {
-                    if(gameBoard[i][j]==protection)
-                    {
-                        System.out.print(water+" ");
-                    }
-                    else
-                    {
+                        System.out.print(gameBoard[i][j]+" ");   
+                }
+                System.out.println();
+            }
+           
+        }
+
+        private static int[] getUserShot(Scanner scan) {
+            int[] userShot = new int[2];
+            System.out.println("enter coordinate X:");
+            userShot[1] = scan.nextInt();
+            userShot[1]--;
+            System.out.println("enter coordinate Y:");
+            userShot[0] = scan.nextInt();
+            userShot[0]--;
+            return userShot;
+        }
+
+        private static void printGameBoard(char[][] gameBoard,int gameFieldLength,char protection,char water) {
+            System.out.print("  ");
+            for (int i = 0;i<7;i++)
+            {
+                System.out.print(i+1+" ");
+            }
+            System.out.println();
+            for (int i = 0;i<gameFieldLength;i++)
+            {
+                System.out.print(i+1+" ");
+                for (int j = 0;j<gameFieldLength;j++)
+                {
+                    // if(gameBoard[i][j]!=water)
+                    // {
+                    //     System.out.print(water+" ");
+                    // }
+                    // else
+                    // {
                         System.out.print(gameBoard[i][j]+" ");
-                    }
+                    //}
                     
                 }
                 System.out.println();
