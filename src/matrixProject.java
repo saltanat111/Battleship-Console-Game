@@ -21,15 +21,11 @@ public class matrixProject {
             int singleShipNumber = 4;
             int doubleShipNumber = 2;
             int tripleShipNumber = 1;
-            int shipNum = 11;
             char[][] gameBoard = createGameBoard(gameFieldLength,water,ship3,singleShipNumber,doubleShipNumber,tripleShipNumber,random,protection,ship1,ship2);
             printGameBoard(gameBoard,gameFieldLength,protection,water);
             ArrayList<Integer> doubleShipLocations = identifyAllDoubleShipLocations(gameBoard,gameFieldLength,ship2);
-            while (shipNum>0)
-            {
-                int[] userShot = getUserShot(scan);
-                checkUserShotAndUpdateGameboard(gameBoard,userShot,gameFieldLength,water,userShot,ship1,ship2,ship3,hit,miss,sunk,doubleShipLocations,shipNum);
-            }
+            getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship2,ship3,hit,miss,sunk,doubleShipLocations,scan);
+            
             
             
 
@@ -52,9 +48,19 @@ public class matrixProject {
             return doubleShipLocations;
         }
 
-        private static void checkUserShotAndUpdateGameboard(char[][] gameBoard, int[] userShot, int gameFieldLength, char water, int[] userShot2, char ship1, char ship2, char ship3, char hit, char miss, char sunk, ArrayList<Integer> doubleShipLocations, int shipNum) {
-                    
-                    if(gameBoard[userShot[0]][userShot[1]]==ship3)   
+        private static void getCheckUserShotAndUpdataGameboard(char[][] gameBoard, int gameFieldLength, char water,  char ship1, char ship2, char ship3, char hit, char miss, char sunk, ArrayList<Integer> doubleShipLocations, Scanner scan) {
+            int[] userShot = new int[2];
+            int shipNum = 11;
+            while (shipNum>0)
+            {
+                    System.out.println("enter coordinate X:");//get user shot
+                    userShot[1] = scan.nextInt();
+                    userShot[1]--;
+                    System.out.println("enter coordinate Y:");
+                    userShot[0] = scan.nextInt();
+                    userShot[0]--;
+            
+                    if(gameBoard[userShot[0]][userShot[1]]==ship3)//check user shot
                     {
                         gameBoard[userShot[0]][userShot[1]] = hit;
                         shipNum--;
@@ -72,36 +78,24 @@ public class matrixProject {
                     else
                     {
                         gameBoard[userShot[0]][userShot[1]] = miss;
-                        shipNum--;
                     }
+                    System.out.print("  ");
 
-            System.out.print("  ");
-            for (int i = 0;i<7;i++)
-            {
-                System.out.print(i+1+" ");
+                    for (int i = 0;i<7;i++)//update game board
+                    {
+                        System.out.print(i+1+" ");
+                    }
+                    System.out.println();
+                    for (int i = 0;i<gameFieldLength;i++)
+                    {
+                        System.out.print(i+1+" ");
+                        for (int j = 0;j<gameFieldLength;j++)
+                        {
+                                System.out.print(gameBoard[i][j]+" ");   
+                        }
+                        System.out.println();
+                    }
             }
-            System.out.println();
-            for (int i = 0;i<gameFieldLength;i++)
-            {
-                System.out.print(i+1+" ");
-                for (int j = 0;j<gameFieldLength;j++)
-                {
-                        System.out.print(gameBoard[i][j]+" ");   
-                }
-                System.out.println();
-            }
-           
-        }
-
-        private static int[] getUserShot(Scanner scan) {
-            int[] userShot = new int[2];
-            System.out.println("enter coordinate X:");
-            userShot[1] = scan.nextInt();
-            userShot[1]--;
-            System.out.println("enter coordinate Y:");
-            userShot[0] = scan.nextInt();
-            userShot[0]--;
-            return userShot;
         }
 
         private static void printGameBoard(char[][] gameBoard,int gameFieldLength,char protection,char water) {
@@ -160,72 +154,49 @@ public class matrixProject {
                         case 1://vertical
                             gameBoard[coordinates[0]+1][coordinates[1]]=ship3;
                             gameBoard[coordinates[0]-1][coordinates[1]]=ship3;
-                            if(coordinates[0]==1)
+                            for(int i = 0;i<3;i++)
                             {
-                                for (int i = 0;i<4;i++)
-                                {
-                                    gameBoard[coordinates[0]-1+i][coordinates[1]+1]=protection;
-                                    gameBoard[coordinates[0]-1+i][coordinates[1]-1]=protection;
+                                gameBoard[coordinates[0]-1+i][coordinates[1]+1]=protection;
+                                gameBoard[coordinates[0]-1+i][coordinates[1]-1]=protection;
+                                if(coordinates[0]==1)
+                                {                                 
+                                    gameBoard[coordinates[0]+2][coordinates[1]-1+i]=protection;//down side of ship
                                 }
-                                gameBoard[coordinates[0]+2][coordinates[1]]=protection;
-                            }
-                            else if(coordinates[0]==5)
-                            {
-                                gameBoard[coordinates[0]-2][coordinates[1]]=protection;
-                                for (int i = 0;i<4;i++)
+                                else if(coordinates[0]==5)
                                 {
-                                    gameBoard[coordinates[0]-2+i][coordinates[1]+1]=protection;
-                                    gameBoard[coordinates[0]-2+i][coordinates[1]-1]=protection;
+                                    gameBoard[coordinates[0]-2][coordinates[1]-1+i]=protection;//upper side of ship
                                 }
-                            }
-                            else
-                            {
-                                gameBoard[coordinates[0]-2][coordinates[1]]=protection;
-                                for (int i = 0;i<5;i++)
+                                else
                                 {
-                                    gameBoard[coordinates[0]-2+i][coordinates[1]+1]=protection;
-                                    gameBoard[coordinates[0]-2+i][coordinates[1]-1]=protection;
+                                    gameBoard[coordinates[0]+2][coordinates[1]-1+i]=protection;
+                                    gameBoard[coordinates[0]-2][coordinates[1]-1+i]=protection;
                                 }
-                                gameBoard[coordinates[0]+2][coordinates[1]]=protection;
-                            }
-                            break;                  
+                            }                           
+                            break;                 
                         case 2://horizontal
                             gameBoard[coordinates[0]][coordinates[1]+1]=ship3;
                             gameBoard[coordinates[0]][coordinates[1]-1]=ship3;
-                            if(coordinates[1]==1)
+                            for(int i = 0;i<3;i++)
                             {
-                                for (int i = 0;i<4;i++)
+                                if(coordinates[1]==1)
                                 {
-                                    gameBoard[coordinates[0]-1][coordinates[1]-1+i]=protection;
-                                    gameBoard[coordinates[0]+1][coordinates[1]-1+i]=protection;
+                                    gameBoard[coordinates[0]-1+i][coordinates[1]+2]=protection;//right side of the ship
                                 }
-                                gameBoard[coordinates[0]][coordinates[1]+2]=protection;
-                            }
-                            else if(coordinates[1]==5)
-                            {
-                                for (int i = 0;i<4;i++)
+                                else if(coordinates[1]==5)
                                 {
-                                    gameBoard[coordinates[0]-1][coordinates[1]+1-i]=protection;
-                                    gameBoard[coordinates[0]+1][coordinates[1]+1-i]=protection;
+                                    gameBoard[coordinates[0]-1+i][coordinates[1]-2]=protection;//left side of the ship
                                 }
-                                gameBoard[coordinates[0]][coordinates[1]-2]=protection;
-                            }
-                            else
-                            {
-                                gameBoard[coordinates[0]][coordinates[1]-2]=protection;
-                                for (int i = 0;i<5;i++)
+                                else
                                 {
-                                    gameBoard[coordinates[0]-1][coordinates[1]-2+i]=protection;
-                                    gameBoard[coordinates[0]+1][coordinates[1]-2+i]=protection;
+                                    gameBoard[coordinates[0]-1+i][coordinates[1]-2]=protection;
+                                    gameBoard[coordinates[0]-1+i][coordinates[1]+2]=protection;
                                 }
-                                gameBoard[coordinates[0]][coordinates[1]+2]=protection;
-
+                                gameBoard[coordinates[0]-1][coordinates[1]-1+i]=protection;
+                                gameBoard[coordinates[0]+1][coordinates[1]-1+i]=protection;
                             }
-
                             break;
                     }
                     placedTripleShips++;
-                    
                 }
             }
             while (placedDoubleShips<doubleShipNumber)
@@ -320,7 +291,6 @@ public class matrixProject {
 
                         placedDoubleShips++;
                     }
-                       
             }
             while (placedSingleShips<singleShipNumber) 
             {
