@@ -25,15 +25,15 @@ public class matrixProject {
             //ArrayList<Integer> identifyAllTripleShipLocations = identifyAllTripleShipLocations(gameBoard,  gameFieldLength, ship3);
             printGameBoard(gameBoard,gameFieldLength,protection,water);
             getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship2,ship3,hit,miss,sunk,scan,doubleShipLocations,tripleShipCoordinates);
-            //String nextgame = scan.nextLine();
-
-            // while (nextgame=="y")
-            // {
-            //     gameBoard = createGameBoard(gameFieldLength,water,ship3,random,protection,ship1,ship2);
-            //     printGameBoard(gameBoard,gameFieldLength,protection,water);
-            //     getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship2,ship3,hit,miss,sunk,scan);
-            //     nextgame = scan.nextLine();
-            // }
+            String nextgame = scan.nextLine();
+            String yes = "y";
+            while (nextgame.equals(yes))
+            {
+                gameBoard = createGameBoard(gameFieldLength,water,ship3,random,protection,ship1,ship2,tripleShipCoordinates);
+                printGameBoard(gameBoard,gameFieldLength,protection,water);
+                getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship2,ship3,hit,miss,sunk,scan,doubleShipLocations,tripleShipCoordinates);
+                nextgame = scan.nextLine();
+            }
         }
     
         private static ArrayList<Integer> identifyAllDoubleShipLocations(char[][] gameBoard, int gameFieldLength,char ship2) {
