@@ -1,80 +1,77 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*; 
 
 public class matrixProject {
+    // This map stores unsorted values
+    static Map<Integer, String> ratings = new HashMap<>();
+ 
+    // Function to sort map by Key
+    public static void sortbykey()
+    {
+        ArrayList<Integer> sortedKeys = new ArrayList<Integer>(ratings.keySet());
+ 
+        Collections.sort(sortedKeys);
+ 
+        // Display the TreeMap which is naturally sorted
+        for (int x : sortedKeys)
+            System.out.println("Name :" + ratings.get(x)+ "  " + "Number of shots :" + x);
+    }
+ 
         public static void main(String[] args) {
             Scanner scan = new Scanner(System.in);
             Random random = new Random();
             int gameFieldLength = 7;
             char water = '~';
             char ship3 = '3';
-            char ship2 = '2';
+            char ship2a = 'a';
+            char ship2b = 'b';
             char ship1 = '1';
             char hit = 'h';
             char miss = 'm';
             char sunk = 's';
             char protection = 'p';  
-            int[][] tripleShipCoordinates = new int[3][2];
-            char[][] gameBoard = createGameBoard(gameFieldLength,water,ship3,random,protection,ship1,ship2,tripleShipCoordinates);
-
-            ArrayList<Integer> doubleShipLocations = identifyAllDoubleShipLocations(gameBoard,gameFieldLength,ship2);
-            //ArrayList<Integer> identifyAllTripleShipLocations = identifyAllTripleShipLocations(gameBoard,  gameFieldLength, ship3);
+            
+            char[][] gameBoard = createGameBoard(gameFieldLength,water,ship3,random,protection,ship1,ship2a,ship2b);
+            String name = ascNameAndReturnValue(scan);
             printGameBoard(gameBoard,gameFieldLength,protection,water);
-            getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship2,ship3,hit,miss,sunk,scan,doubleShipLocations,tripleShipCoordinates);
+            int allShots = 0;
+            getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship3,hit,miss,sunk,scan,ship2a,ship2b,name,allShots);
+
+            //HashMap<Integer,String> ratings = new HashMap<>();
+            ratings.put(allShots, name);
+
             String nextgame = scan.nextLine();
             String yes = "y";
             while (nextgame.equals(yes))
             {
-                gameBoard = createGameBoard(gameFieldLength,water,ship3,random,protection,ship1,ship2,tripleShipCoordinates);
+                System.out.print("\033[H\033[2J");  
+                System.out.flush();
+                gameBoard = createGameBoard(gameFieldLength,water,ship3,random,protection,ship1,ship2a,ship2b);
+                name = ascNameAndReturnValue(scan);
                 printGameBoard(gameBoard,gameFieldLength,protection,water);
-                getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship2,ship3,hit,miss,sunk,scan,doubleShipLocations,tripleShipCoordinates);
+                getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship3,hit,miss,sunk,scan,ship2a,ship2b,name,allShots);
+                ratings.put(allShots, name);
                 nextgame = scan.nextLine();
             }
+            sortbykey();
         }
-    
-        private static ArrayList<Integer> identifyAllDoubleShipLocations(char[][] gameBoard, int gameFieldLength,char ship2) {
-            ArrayList <Integer> doubleShipLocations = new ArrayList<>();
-            for (int i = 0;i<gameFieldLength;i++)
-            {
-                for (int j = 0;j<gameFieldLength;j++)
-                {
-                    if(gameBoard[i][j]==ship2)
-                    {
-                        doubleShipLocations.add(i);
-                        doubleShipLocations.add(j);
-                    }
-                }
-            }
-            Collections.sort(doubleShipLocations);
-            return doubleShipLocations;
+ 
+        
+        private static String ascNameAndReturnValue(Scanner scan) {
+            System.out.println("Enter your name : ");
+            String name = scan.nextLine();
+            return name;
         }
-        // private static ArrayList<Integer> identifyAllTripleShipLocations(char[][] gameBoard, int gameFieldLength,char ship3) {
-        //     ArrayList <Integer> doubleShipLocations = new ArrayList<>();
-        //     for (int i = 0;i<gameFieldLength;i++)
-        //     {
-        //         for (int j = 0;j<gameFieldLength;j++)
-        //         {
-        //             if(gameBoard[i][j]==ship3)
-        //             {
-        //                 doubleShipLocations.add(i);
-        //                 doubleShipLocations.add(j);
-        //             }
-        //         }
-        //     }
-            
-        //     return doubleShipLocations;
-        // }
 
-        private static void getCheckUserShotAndUpdataGameboard(char[][] gameBoard, int gameFieldLength, char water,  char ship1, char ship2, char ship3, char hit, char miss, char sunk, Scanner scan, ArrayList<Integer> doubleShipLocations, int[][] tripleShipCoordinates) {
+
+        private static void getCheckUserShotAndUpdataGameboard(char[][] gameBoard, int gameFieldLength, char water,  char ship1, char ship3, char hit, char miss, char sunk, Scanner scan ,char ship2a,char ship2b,String name,int allShots) {
             int[] userShot = new int[2];
             int shipNum = 11;
-            int allShots = 0;
             int tripleShipDetected = 0;
-            ArrayList<Integer> doubleShipDetected = new ArrayList<>();
+            int ship2aDetected = 0;
+            int ship2bDetected = 0;
+            char hit3 = 'u';
+            char hit2a = 'A';
+            char hit2b = 'B';
             while (shipNum>0)
             {
                     System.out.println("enter coordinate X:");//get user shot
@@ -93,22 +90,74 @@ public class matrixProject {
                         userShot[0] = scan.nextInt();
                         userShot[0]--;
                     }
-                    
+                    while ((gameBoard[userShot[0]][userShot[1]]==miss)||(gameBoard[userShot[0]][userShot[1]]==hit)||(gameBoard[userShot[0]][userShot[1]]==sunk)||(gameBoard[userShot[0]][userShot[1]]==hit2a)||(gameBoard[userShot[0]][userShot[1]]==hit2b)||(gameBoard[userShot[0]][userShot[1]]==hit3)) {
+                        System.out.println("Do not shot at shotted before cells"+"\n"+"enter coordinate X:");//get user shot
+                        userShot[1] = scan.nextInt();
+                        userShot[1]--;
+                        System.out.println("enter coordinate Y:");
+                        userShot[0] = scan.nextInt();
+                        userShot[0]--;
+                    }
+                   
+
                     if(gameBoard[userShot[0]][userShot[1]]==ship3)//check user shot
                     {
-                        gameBoard[userShot[0]][userShot[1]] = hit;
+                        gameBoard[userShot[0]][userShot[1]] = hit3;
                         tripleShipDetected++;
                         shipNum--;
-                        // if(tripleShipDetected==3)
-                        // {
-                        //     gameBoard[]
-                        // }
+                        if(tripleShipDetected==3)
+                        {
+                            for (int i = 0;i<gameFieldLength;i++)
+                            {
+                                for(int j = 0;j<gameFieldLength;j++)
+                                {
+                                    if(gameBoard[i][j]==hit3)
+                                    {
+                                        gameBoard[i][j] = sunk;
+                                    }
+                                }
+                            }
+                        }
                     }
-                    else if(gameBoard[userShot[0]][userShot[1]]==ship2)
+                    else if(gameBoard[userShot[0]][userShot[1]]==ship2b)
                     {
-                        gameBoard[userShot[0]][userShot[1]] = hit;
+                        gameBoard[userShot[0]][userShot[1]] = hit2b;
+                        ship2bDetected++;
                         shipNum--;
+                        if(ship2bDetected==2)
+                        {
+                            for (int i = 0;i<gameFieldLength;i++)
+                            {
+                                for(int j = 0;j<gameFieldLength;j++)
+                                {
+                                    if(gameBoard[i][j]==hit2b)
+                                    {
+                                        gameBoard[i][j] = sunk;
+                                    }
+                                }
+                            }
+                        }
                     }
+                    else if(gameBoard[userShot[0]][userShot[1]]==ship2a)
+                    {
+                        gameBoard[userShot[0]][userShot[1]] = hit2a;
+                        ship2aDetected++;
+                        shipNum--;
+                        if(ship2aDetected==2)
+                        {
+                            for (int i = 0;i<gameFieldLength;i++)
+                            {
+                                for(int j = 0;j<gameFieldLength;j++)
+                                {
+                                    if(gameBoard[i][j]==hit2a)
+                                    {
+                                        gameBoard[i][j] = sunk;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
                     else if(gameBoard[userShot[0]][userShot[1]]==ship1)
                     {
                         gameBoard[userShot[0]][userShot[1]] = sunk;
@@ -132,8 +181,11 @@ public class matrixProject {
                         System.out.print(i+1+" ");
                         for (int j = 0;j<gameFieldLength;j++)
                         {
-                            
-                            if((gameBoard[i][j]!=water)&&(gameBoard[i][j]!=hit)&&(gameBoard[i][j]!=miss)&&(gameBoard[i][j]!=sunk)&&(gameBoard[i][j]!=miss))
+                            if((gameBoard[i][j]==hit3)||(gameBoard[i][j]==hit2a)||(gameBoard[i][j]==hit2b))
+                            {
+                                System.out.print(hit+" ");
+                            }
+                            else if((gameBoard[i][j]!=water)&&(gameBoard[i][j]!=hit)&&(gameBoard[i][j]!=miss)&&(gameBoard[i][j]!=sunk))
                             {
                                 System.out.print(water+" ");  
                             }
@@ -147,12 +199,7 @@ public class matrixProject {
             }
             System.out.println("Game over.You won!"+"\n"+"All shots number:" + allShots+"\n"+"Do you want to start over?Type \"y\" for yes and \"n\" for no");
             String nextgame = scan.nextLine();
-            String nextGameCompare = "y";
-            if (Objects.equals(nextgame,nextGameCompare))
-            {
-                String[] str = null;
-                main(str);
-            }
+
         }
         
 
@@ -168,21 +215,21 @@ public class matrixProject {
                 System.out.print(i+1+" ");
                 for (int j = 0;j<gameFieldLength;j++)
                 {
-                    if(gameBoard[i][j]!=water)
-                    {
-                        System.out.print(water+" ");
-                    }
-                    else
-                    {
+                    // if(gameBoard[i][j]!=water)
+                    // {
+                    //     System.out.print(water+" ");
+                    // }
+                    // else
+                    // {
                         System.out.print(gameBoard[i][j]+" ");
-                    }
+                    //}
                     
                 }
                 System.out.println();
             }
         }
 
-        private static char[][] createGameBoard(int gameFieldLength, char water, char ship3, Random random,char protection,char ship1,char ship2, int[][] tripleShipCoordinates) 
+        private static char[][] createGameBoard(int gameFieldLength, char water, char ship3, Random random,char protection,char ship1 ,char ship2a,char ship2b) 
         {
             char[][] gameBoard = new char[gameFieldLength][gameFieldLength];
             int [] coordinates = new int[2];
@@ -208,14 +255,6 @@ public class matrixProject {
                         case 1://vertical
                             gameBoard[coordinates[0]+1][coordinates[1]]=ship3;
                             gameBoard[coordinates[0]-1][coordinates[1]]=ship3;
-                            for (int j = 0;j<3;j++)//save coordinates to change from hit to sunk
-                            {
-                                tripleShipCoordinates[j][0] = coordinates[0]-1+j;//y coord
-                            }
-                            for (int j = 0;j<3;j++)
-                            {
-                                tripleShipCoordinates[j][1] = coordinates[1];//x coord
-                            }
                             for(int i = 0;i<3;i++)
                             {
                                 gameBoard[coordinates[0]-1+i][coordinates[1]+1]=protection;
@@ -239,14 +278,6 @@ public class matrixProject {
                         case 2://horizontal
                             gameBoard[coordinates[0]][coordinates[1]+1]=ship3;
                             gameBoard[coordinates[0]][coordinates[1]-1]=ship3;
-                            for (int j = 0;j<3;j++)
-                            {
-                                tripleShipCoordinates[j][0] = coordinates[0];//y coord
-                            }
-                            for (int j = 0;j<3;j++)
-                            {
-                                tripleShipCoordinates[j][1] = coordinates[1]-1+j;//x coord
-                            }
                             for(int i = 0;i<3;i++)
                             {
                                 if(coordinates[1]==1)
@@ -279,8 +310,19 @@ public class matrixProject {
                 //vertical down
                     if ((gameBoard[coordinates[0]][coordinates[1]]==water)&&(coordinates[0]<=5)&&(gameBoard[coordinates[0]+1][coordinates[1]]==water))
                     {
-                        gameBoard[coordinates[0]][coordinates[1]]=ship2;
-                        gameBoard[coordinates[0]+1][coordinates[1]]=ship2;
+                        if(placedDoubleShips == 0)
+                        {
+                            gameBoard[coordinates[0]][coordinates[1]]=ship2a;
+                            gameBoard[coordinates[0]+1][coordinates[1]]=ship2a;
+                            placedDoubleShips++;
+                        }
+                        else if(placedDoubleShips == 1)
+                        {
+                            gameBoard[coordinates[0]][coordinates[1]]=ship2b;
+                            gameBoard[coordinates[0]+1][coordinates[1]]=ship2b;
+                            placedDoubleShips++;
+                        }
+                        
                         for (int i = 0;i<2;i++)//vertical protections
                         {
                             if(coordinates[1]!=6)//6
@@ -330,7 +372,7 @@ public class matrixProject {
                                 break;
                             }
                         }
-                        placedDoubleShips++;
+                        
                     }
             }
             while (placedSingleShips<4) 
