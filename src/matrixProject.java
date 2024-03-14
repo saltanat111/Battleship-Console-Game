@@ -1,21 +1,8 @@
 import java.util.*; 
 
 public class matrixProject {
-    // This map stores unsorted values
     static Map<Integer, String> ratings = new HashMap<>();
- 
-    // Function to sort map by Key
-    public static void sortbykey()
-    {
-        ArrayList<Integer> sortedKeys = new ArrayList<Integer>(ratings.keySet());
- 
-        Collections.sort(sortedKeys);
- 
-        // Display the TreeMap which is naturally sorted
-        for (int x : sortedKeys)
-            System.out.println("Name :" + ratings.get(x)+ "  " + "Number of shots :" + x);
-    }
- 
+    
         public static void main(String[] args) {
             Scanner scan = new Scanner(System.in);
             Random random = new Random();
@@ -29,14 +16,13 @@ public class matrixProject {
             char miss = 'm';
             char sunk = 's';
             char protection = 'p';  
-            
+            int[] userShot = new int[2];
+            int allShots = 0;
+
             char[][] gameBoard = createGameBoard(gameFieldLength,water,ship3,random,protection,ship1,ship2a,ship2b);
             String name = ascNameAndReturnValue(scan);
             printGameBoard(gameBoard,gameFieldLength,protection,water);
-            int allShots = 0;
-            getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship3,hit,miss,sunk,scan,ship2a,ship2b,name,allShots);
-
-            //HashMap<Integer,String> ratings = new HashMap<>();
+            getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship3,hit,miss,sunk,scan,ship2a,ship2b,name,allShots,userShot);
             ratings.put(allShots, name);
 
             String nextgame = scan.nextLine();
@@ -48,13 +34,33 @@ public class matrixProject {
                 gameBoard = createGameBoard(gameFieldLength,water,ship3,random,protection,ship1,ship2a,ship2b);
                 name = ascNameAndReturnValue(scan);
                 printGameBoard(gameBoard,gameFieldLength,protection,water);
-                getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship3,hit,miss,sunk,scan,ship2a,ship2b,name,allShots);
+                getCheckUserShotAndUpdataGameboard(gameBoard,gameFieldLength,water,ship1,ship3,hit,miss,sunk,scan,ship2a,ship2b,name,allShots,userShot);
                 ratings.put(allShots, name);
                 nextgame = scan.nextLine();
             }
             sortbykey();
         }
- 
+        private static int[] getUserShotIfWrong (int[] userShot,Scanner scan)
+        {
+            while(((userShot[0]>6)||(userShot[1]>6))||((userShot[0]<0)||(userShot[1]<0)))
+                        {
+                            System.out.println("Range is from 1 to 7"+"\n"+"enter coordinate X:");//get user shot
+                            userShot[1] = scan.nextInt();
+                            userShot[1]--;
+                            System.out.println("enter coordinate Y:");
+                            userShot[0] = scan.nextInt();
+                            userShot[0]--;
+                        }
+                        return userShot;
+        }
+        public static void sortbykey()
+        {
+            ArrayList<Integer> sortedKeys = new ArrayList<Integer>(ratings.keySet());
+            Collections.sort(sortedKeys);
+
+            for (int x : sortedKeys)
+                System.out.println("Name :" + ratings.get(x)+ "  " + "Number of shots :" + x);
+        }
         
         private static String ascNameAndReturnValue(Scanner scan) {
             System.out.println("Enter your name : ");
@@ -63,8 +69,7 @@ public class matrixProject {
         }
 
 
-        private static void getCheckUserShotAndUpdataGameboard(char[][] gameBoard, int gameFieldLength, char water,  char ship1, char ship3, char hit, char miss, char sunk, Scanner scan ,char ship2a,char ship2b,String name,int allShots) {
-            int[] userShot = new int[2];
+        private static void getCheckUserShotAndUpdataGameboard(char[][] gameBoard, int gameFieldLength, char water,  char ship1, char ship3, char hit, char miss, char sunk, Scanner scan ,char ship2a,char ship2b,String name,int allShots,int[]userShot) {
             int shipNum = 11;
             int tripleShipDetected = 0;
             int ship2aDetected = 0;
@@ -81,15 +86,7 @@ public class matrixProject {
                     userShot[0] = scan.nextInt();
                     userShot[0]--;
                     allShots++;
-                    while(((userShot[0]>7)||(userShot[1]>7))||((userShot[0]<0)||(userShot[1]<0)))
-                    {
-                        System.out.println("Range is from 1 to 7"+"\n"+"enter coordinate X:");//get user shot
-                        userShot[1] = scan.nextInt();
-                        userShot[1]--;
-                        System.out.println("enter coordinate Y:");
-                        userShot[0] = scan.nextInt();
-                        userShot[0]--;
-                    }
+                    getUserShotIfWrong ( userShot, scan);
                     while ((gameBoard[userShot[0]][userShot[1]]==miss)||(gameBoard[userShot[0]][userShot[1]]==hit)||(gameBoard[userShot[0]][userShot[1]]==sunk)||(gameBoard[userShot[0]][userShot[1]]==hit2a)||(gameBoard[userShot[0]][userShot[1]]==hit2b)||(gameBoard[userShot[0]][userShot[1]]==hit3)) {
                         System.out.println("Do not shot at shotted before cells"+"\n"+"enter coordinate X:");//get user shot
                         userShot[1] = scan.nextInt();
@@ -97,8 +94,11 @@ public class matrixProject {
                         System.out.println("enter coordinate Y:");
                         userShot[0] = scan.nextInt();
                         userShot[0]--;
+                        getUserShotIfWrong ( userShot, scan);
                     }
-                   
+                    
+                    System.out.print("\033[H\033[2J");  
+                    System.out.flush();
 
                     if(gameBoard[userShot[0]][userShot[1]]==ship3)//check user shot
                     {
@@ -167,8 +167,8 @@ public class matrixProject {
                     {
                         gameBoard[userShot[0]][userShot[1]] = miss;
                     }
-                    System.out.print("\033[H\033[2J");  
-                    System.out.flush();
+                    // System.out.print("\033[H\033[2J");  
+                    // System.out.flush();
                     System.out.print("  ");
                     for (int i = 0;i<7;i++)//update game board
                     {
@@ -215,14 +215,14 @@ public class matrixProject {
                 System.out.print(i+1+" ");
                 for (int j = 0;j<gameFieldLength;j++)
                 {
-                    // if(gameBoard[i][j]!=water)
-                    // {
-                    //     System.out.print(water+" ");
-                    // }
-                    // else
-                    // {
+                    if(gameBoard[i][j]!=water)
+                    {
+                        System.out.print(water+" ");
+                    }
+                    else
+                    {
                         System.out.print(gameBoard[i][j]+" ");
-                    //}
+                    }
                     
                 }
                 System.out.println();
