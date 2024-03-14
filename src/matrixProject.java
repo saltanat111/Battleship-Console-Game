@@ -51,7 +51,7 @@ public class matrixProject {
                             userShot[0] = scan.nextInt();
                             userShot[0]--;
                         }
-                        return userShot;
+            return userShot;
         }
         public static void sortbykey()
         {
